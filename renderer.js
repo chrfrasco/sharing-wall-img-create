@@ -11,12 +11,16 @@ class Renderer {
     const page = await this.browser.newPage();
     await page.setViewport({ width: 500, height: 500 });
 
-    await page.goto(`file://${path.join(__dirname, "index.html")}`);
+    await page.goto(`file://${path.join(__dirname, "/template/index.html")}`);
     await page.evaluate(
       ({ quote, name }) => {
-        // eslint-disable-next-line no-undef
-        let dom = document.querySelector("#text-content");
-        dom.innerHTML = `"${quote}", by ${name}`;
+        /* eslint-disable no-undef */
+        const quoteBody = document.querySelector("#quote-body");
+        const quoteName = document.querySelector("#quote-name");
+        /* eslint-enable no-undef */
+
+        quoteBody.innerHTML = `&lsquo;${quote}&rsquo;`;
+        quoteName.innerHTML = name;
       },
       { quote, name }
     );
