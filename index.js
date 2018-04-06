@@ -27,32 +27,25 @@ function validate(body, properties) {
 
 let renderer;
 
-app.get("/", async (req, res) => {
-  const { valid, message } = validate(req.query, ["quote", "name"]);
+async function handle(req, res, { quote = null, name = null }) {
+  const { valid, message } = validate({ quote, name }, ["quote", "name"]);
   if (!valid) {
     res.status(400).send(message);
     return;
   }
 
-  const { quote, name } = req.query;
   const img = await renderer.quote({ quote, name });
 
   const content = `<img src="${img}">`;
   res.status(200).send(content);
+}
+
+app.get("/", async (req, res) => {
+  await handle(req, res, req.query);
 });
 
 app.post("/", async (req, res) => {
-  const { valid, message } = validate(req.body, ["quote", "name"]);
-  if (!valid) {
-    res.status(400).send(message);
-    return;
-  }
-
-  const { quote, name } = req.body;
-  const img = await renderer.quote({ quote, name });
-
-  const content = `<img src="${img}">`;
-  res.status(200).send(content);
+  await handle(req, res, req.body);
 });
 
 app.use((err, req, res, next) => {
