@@ -11,12 +11,30 @@ const port = process.env.PORT || 5000;
 app.use(bodyParser.json());
 app.use(morgan("combined"));
 
+function validate(body, properties) {
+  let valid = true;
+  let missing = [];
+  for (const prop of properties) {
+    if (body[prop] == null || body[prop] == "") {
+      valid = false;
+      missing.push(prop);
+    }
+  }
+
+  const message = `Missing ${missing.map(s => `"${s}"`).join(", ")} in body`;
+  return { valid, message };
+}
+
 let renderer;
-app.get("/", async (req, res) => {
-  const content = await renderer.quote({
-    quote: "Hello, world",
-    name: "Christan Scott"
-  });
+app.post("/", async (req, res) => {
+  const { valid, message } = validate(req.body, ["quote", "name"]);
+  if (!valid) {
+    res.status(400).send(message);
+  }
+
+  const { quote, name } = req.body;
+  const content = await renderer.quote({ quote, name });
+
   res.status(200).send(content);
 });
 
