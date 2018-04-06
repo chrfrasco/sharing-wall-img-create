@@ -9,9 +9,9 @@ class Renderer {
 
   async quote({ quote, name }) {
     const page = await this.browser.newPage();
-    await page.setViewport({ width: 500, height: 500 });
+    await page.setViewport({ width: 1000, height: 1000 });
 
-    await page.goto(`file://${path.join(__dirname, "/template/index.html")}`);
+    await page.goto(`file://${path.join(__dirname, "../template/index.html")}`);
     await page.evaluate(
       ({ quote, name }) => {
         /* eslint-disable no-undef */
@@ -25,8 +25,7 @@ class Renderer {
       { quote, name }
     );
 
-    const buff = await page.screenshot({ fullPage: true });
-    return `data:image/png;base64,${buff.toString("base64")}`;
+    return await page.screenshot({ fullPage: true });
   }
 }
 

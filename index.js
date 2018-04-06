@@ -3,7 +3,8 @@ const bodyParser = require("body-parser");
 const express = require("express");
 const morgan = require("morgan");
 
-const createRenderer = require("./renderer");
+const createRenderer = require("./src/renderer");
+const uploader = require("./src/uploader");
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -34,10 +35,9 @@ async function handle(req, res, { quote = null, name = null }) {
     return;
   }
 
-  const img = await renderer.quote({ quote, name });
-
-  const content = `<img src="${img}">`;
-  res.status(200).send(content);
+  const imgBuf = await renderer.quote({ quote, name });
+  const url = await uploader.upload(imgBuf, "foobar");
+  res.status(200).json({ url });
 }
 
 app.get("/", async (req, res) => {
