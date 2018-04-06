@@ -12,7 +12,7 @@
 html {
   box-sizing: border-box;
   font-family: "Requiem";
-  font-size: 18px;
+  font-size: 36px;
   line-height: 1.2;
   color: #555350;
 }
@@ -54,8 +54,8 @@ p {
 }
 
 .quote__wrapper {
-  height: 500px;
-  width: 500px;
+  height: 1000px;
+  width: 1000px;
   position: relative;
 }
 
