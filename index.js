@@ -33,8 +33,9 @@ app.post("/", async (req, res) => {
   }
 
   const { quote, name } = req.body;
-  const content = await renderer.quote({ quote, name });
+  const img = await renderer.quote({ quote, name });
 
+  const content = `<img src="${img}">`;
   res.status(200).send(content);
 });
 

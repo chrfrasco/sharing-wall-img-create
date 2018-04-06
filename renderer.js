@@ -9,6 +9,7 @@ class Renderer {
 
   async quote({ quote, name }) {
     const page = await this.browser.newPage();
+    await page.setViewport({ width: 500, height: 500 });
 
     await page.goto(`file://${path.join(__dirname, "index.html")}`);
     await page.evaluate(
@@ -20,7 +21,8 @@ class Renderer {
       { quote, name }
     );
 
-    return await page.content();
+    const buff = await page.screenshot({ fullPage: true });
+    return `data:image/png;base64,${buff.toString("base64")}`;
   }
 }
 
