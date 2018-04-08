@@ -1,10 +1,16 @@
 FROM kinlan/puppets:latest
 
 # Copy the app
-COPY . /app/
 #COPY local.conf /etc/fonts/local.conf
 WORKDIR app
-RUN npm i
+
+RUN npm install -g yarn
+
+COPY yarn.lock yarn.lock
+COPY package.json package.json
+RUN yarn
+
+COPY . /app/
 
 # Add user so we don't need --no-sandbox.
 RUN groupadd -r pptruser && useradd -r -g pptruser -G audio,video pptruser \
@@ -18,4 +24,4 @@ USER pptruser
 ENV NODE_ENV=production
 EXPOSE 8084
 ENTRYPOINT ["dumb-init", "--"]
-CMD ["npm", "run", "start"]
+CMD ["yarn", "start"]
